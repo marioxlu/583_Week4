@@ -39,7 +39,7 @@ def get_ape_info(apeID):
     except Exception as e:
         print(f"Error fetching owner for Ape ID {apeID}: {e}")
         return data
-
+    
     # Fetch the tokenURI (metadata location)
     try:
         token_uri = contract.functions.tokenURI(apeID).call()
@@ -48,8 +48,16 @@ def get_ape_info(apeID):
             token_uri = token_uri.replace("ipfs://", "https://ipfs.io/ipfs/")
         # Fetch metadata from IPFS
         metadata = requests.get(token_uri).json()
-        data['image'] = metadata['image']
-        data['eyes'] = metadata['attributes'][0]['value']  # Assuming 'eyes' is the first attribute
+        data['image'] = metadata.get('image', 'Image not found')  # Handle missing image
+
+        # Loop through attributes and look for the 'Eyes' trait
+        for attribute in metadata['attributes']:
+            if attribute['trait_type'] == "Eyes":
+                data['eyes'] = attribute['value']
+                break
+        if not data['eyes']:
+            data['eyes'] = 'Eyes attribute not found'
+
     except Exception as e:
         print(f"Error fetching metadata for Ape ID {apeID}: {e}")
 

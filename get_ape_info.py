@@ -12,7 +12,7 @@ api_url = "https://eth-mainnet.g.alchemy.com/v2/af1I02w3ZtSVoGgFEG9UFCMBGCNVHasF
 provider = HTTPProvider(api_url)
 web3 = Web3(provider)
 
-contract_address = web3.toChecksumAddress(bayc_address)
+
 
 #You will need the ABI to connect to the contract
 #The file 'abi.json' has the ABI for the bored ape contract
@@ -24,7 +24,7 @@ with open('abi.json', 'r') as f:
 
 
 # Instantiate the contract object
-contract = web3.eth.contract(address=contract_address, abi=abi)
+contract = web3.eth.contract(address=bayc_address, abi=abi)
 
 def get_ape_info(apeID):
     assert isinstance(apeID,int), f"{apeID} is not an int"
